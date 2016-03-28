@@ -121,6 +121,24 @@ WHERE member.id = 1 AND first_name = 'Lydia' AND last_name = 'Noureldin' AND fac
 
 Logged in as:  <?php echo $myrow['first_name']; ?><br>
 
+<?php
+// Drop down menu for district names
+include('config/connection.php'); 
+// SELECT query
+$query = "SELECT faculty, degree_type FROM member";
+ 
+// prepare query for execution
+if($stmt = $con->prepare($query)){
+
+// Execute the query
+$stmt->execute();
+
+// Get Results
+$result = $stmt->get_result();
+$con->close();
+}
+?>
+
  <form name='memberSearch' data-toggle='validator' id='memberSearch' action='members.php' method='post'>
 		
 	<div class="form-group has-feedback">
@@ -166,19 +184,37 @@ Logged in as:  <?php echo $myrow['first_name']; ?><br>
 	
 	<div class="form-group">
 		<label for='faculty' class = 'control-label' >Faculty</label> 
-		<select  name='faculty' id='faculty'>
-			<option>1</option>
-			<option>2</option>
-		</select>
+		<?php
+		if ($result->num_rows > 0) {
+			// output data of each row
+		   echo "<select name='faculty'>";
+		   echo "<option> - - - - - - - </option>";
+		   while($row = $result->fetch_assoc()) {
+				echo "<option>".$row['faculty']."</option>";
+			} 
+			echo "</select>";
+		} else {
+				echo "0 results";
+		}
+		?>
 		<br>
     </div>
 	
 	<div class="form-group">
 		<label for='degreeType' class = 'control-label' >Degree Type</label> 
-		<select name='degreeType' id='degreeType'>
-			<option>3</option>
-			<option>4</option>
-		</select>
+		<?php
+		if ($result->num_rows > 0) {
+			// output data of each row
+		   echo "<select name='degree_type'>";
+		   echo "<option> - - - - - - - </option>";
+		   while($row = $result->fetch_assoc()) {
+				echo "<option>".$row['degree_type']."</option>";
+			} 
+			echo "</select>";
+		} else {
+				echo "0 results";
+		}
+		?>
 		<br>
     </div>
 	

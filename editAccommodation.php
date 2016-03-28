@@ -10,10 +10,10 @@
 	<script src="../js/editProfile.js"></script>
     </head>
 <body>
- <?php
-  //Create a user session or resume an existing one
- session_start();
- ?>
+ 
+<?php include 'loginCheck.php'?>
+
+ Logged in as:  <?php echo $myrow['first_name']; ?><br>
  
  <?php
 
@@ -36,71 +36,96 @@
  }
  
  ?>
- <?php 
-	// check if user is logged in 
-	session_start();
-	if(isset($_SESSION['ID'])){
-    include_once 'config/connection.php'; 
-        $query = "SELECT first_name, user_type FROM member WHERE id=?";
-        $stmt = $con->prepare($query);
-        $stmt->bind_Param("s", $_SESSION['ID']);
-		$stmt->execute();
-		$result = $stmt->get_result();
-		$myrow = $result->fetch_assoc();
-	} else {
-		//User is not logged in. Redirect the browser to the login index.php page and kill this page.
-		header("Location: index.php");
-		die();
-	}
-	
-	// display menu bar
-	$user_type = $myrow['user_type'];
-	if($user_type == 'member'){
-		include 'menubar.php';
-	} else {
-		include 'menubarAdmin.php';
-	}
- ?>
- 
- Logged in as:  <?php echo $myrow['first_name']; ?><br>
  
  <?php
 $property_id = $_SESSION['pid'];
 
-$searchQuery = "SELECT address, district, type, price, supplier_id, guests, bedrooms, bathrooms, beds, breakfast,
-				pool, others FROM property NATURAL JOIN features WHERE property_id=3";
+$searchQuery = "SELECT address, district, type, price, supplier_id, guests, bedrooms, bathrooms, beds, breakfast, pool, others FROM property NATURAL JOIN features WHERE property_id=3";
 
 $result = $con->query($searchQuery);
 $row = mysqli_fetch_array($result);
-echo $row['address'] . $row['district'] . $row['type'];
 
  ?>
 <!-- dynamic content will be here -->
 <form data-toggle="validator" role="form" name='editAccommodation' id='editAccommodation' action='editAccommodation.php' method='post'>
 	<div class="form-group">
 		<label>Address</label>
-		<input type='text' name='address' id='address' disabled  value="<?php echo $myrow['address']; ?>"  />
+		<input type='text' name='address' id='address' disabled  value="<?php echo $row['address']; ?>""  />
 		<div class="help-block with-errors"></div>
 	</div>
-	
+	<?php echo $row['type']; ?>
 	<div class="form-group">
 		<br>
 		<label>Type</label>
-		<input type='text' name='type' id='type' required  value="<?php echo $myrow['type']; ?>" />
+		<select>
+			<option>House</option>
+			<option>Apartment</option>
+			<option selected = "selected">Condo</option>
+			<option>Room</option>
+		</select>
 		<div class="help-block with-errors"></div>
 	</div>
 	
 	<div class="form-group">
 		<br>
 		<label>Price</label>
-		<input type='number' name='price' id='price' required  value="<?php echo $myrow['price']; ?>" />
+		<input type='number' name='price' id='price' required  value="<?php echo $row['price']; ?>" />
 		<div class="help-block with-errors"></div>
 	</div>
 	
 	<div class="form-group">
 		<br>
 		<label>Availability</label>
-		<input type='text' name='avail' id='avail' required  value="<?php echo $myrow['availability']; ?>" />
+		<input type='text' name='avail' id='avail' required  value="<?php echo $row['availability']; ?>" />
+		<div class="help-block with-errors"></div>
+	</div>
+	
+	<div class="form-group">
+		<br>
+		<label>Guests</label>
+		<input type='number' name='guests' id='guests' required  value="<?php echo $row['guests']; ?>" />
+		<div class="help-block with-errors"></div>
+	</div>
+	
+	<div class="form-group">
+		<br>
+		<label>Bedrooms</label>
+		<input type='number' name='bedrooms' id='bedrooms' required  value="<?php echo $row['bedrooms']; ?>" />
+		<div class="help-block with-errors"></div>
+	</div>
+	
+	<div class="form-group">
+		<br>
+		<label>Bathrooms</label>
+		<input type='number' name='bathrooms' id='bathrooms' required  value="<?php echo $row['bathrooms']; ?>" />
+		<div class="help-block with-errors"></div>
+	</div>
+	
+	<div class="form-group">
+		<br>
+		<label>Beds</label>
+		<input type='number' name='beds' id='beds' required  value="<?php echo $row['beds']; ?>" />
+		<div class="help-block with-errors"></div>
+	</div>
+	
+	<div class="form-group">
+		<br>
+		<label>Breakfast</label>
+		<input type='number' name='breakfast' id='breakfast' required  value="<?php echo $row['breakfast']; ?>" />
+		<div class="help-block with-errors"></div>
+	</div>
+	
+	<div class="form-group">
+		<br>
+		<label>Pool</label>
+		<input type='number' name='pool' id='pool' required  value="<?php echo $row['pool']; ?>" />
+		<div class="help-block with-errors"></div>
+	</div>
+	
+	<div class="form-group">
+		<br>
+		<label>Other</label>
+		<textarea rows ="8" cols="50" name='bio' id='bio' /><?php echo $row['others']; ?></textarea>  
 		<div class="help-block with-errors"></div>
 	</div>
 	
